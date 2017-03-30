@@ -26,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import org.matrix.androidsdk.data.Room;
+import org.matrix.androidsdk.data.RoomSummary;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
     private final List<T> mFilteredItems;
     private final OnSelectItemListener<T> mListener;
     private OnLongClickItemListener<T> mOnLongClickListener;
+
+    protected int mSelectedPosition = -1;
 
     /*
      * *********************************************************************************************
@@ -71,6 +76,8 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
     public void onBindViewHolder(final R viewHolder, int position) {
         final T item = mFilteredItems.get(position);
         populateViewHolder(viewHolder, item);
+
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +151,48 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
             mFilteredItems.addAll(items);
         }
 
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Move a child view in the roomSummary dir tree
+     */
+    public void move(int fromPosition, int toPosition) {
+        {
+            T item = mItems.get(fromPosition);
+            mItems.remove(fromPosition);
+            if (toPosition >= mItems.size()) {
+                mItems.add(item);
+            } else {
+                mItems.add(toPosition, item);
+            }
+        }
+
+        {
+            T item = mFilteredItems.get(fromPosition);
+            mFilteredItems.remove(fromPosition);
+            if (toPosition >= mFilteredItems.size()) {
+                mFilteredItems.add(item);
+            } else {
+                mFilteredItems.add(toPosition, item);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void insertAt(T item, int position) {
+        mItems.add(position, item);
+        notifyDataSetChanged();
+    }
+
+    public T getItem(int position) {
+        return mItems.get(position);
+    }
+
+    public void remove(T object) {
+        mItems.remove(object);
+        mFilteredItems.remove(object);
         notifyDataSetChanged();
     }
 
