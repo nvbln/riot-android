@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:id="@+id/scrollview"
+    android:background="#00f"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TODO favourites fragment" />
+        android:background="#f00"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            style="@style/ListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="a header 1" />
+
+        <im.vector.view.HomeRecyclerView
+            android:id="@+id/recyclerview_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/ListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            android:text="a header 2" />
+
+        <im.vector.view.HomeRecyclerView
+            android:id="@+id/recyclerview_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</ScrollView>

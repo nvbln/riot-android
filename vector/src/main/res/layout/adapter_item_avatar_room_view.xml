@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/avatar_room_layout"
+    android:layout_width="74dp"
+    android:layout_height="74dp">
+
+    <im.vector.view.VectorCircularImageView
+        android:id="@+id/room_avatar"
+        android:layout_width="@dimen/chat_avatar_size"
+        android:layout_height="@dimen/chat_avatar_size"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/indicator_unread_message"
+        tools:src="@color/material_blue_100" />
+
+</RelativeLayout>

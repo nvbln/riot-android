@@ -35,6 +35,7 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
     private final List<T> mItems;
     private final List<T> mFilteredItems;
     private final OnSelectItemListener<T> mListener;
+    private OnLongClickItemListener<T> mOnLongClickListener;
 
     /*
      * *********************************************************************************************
@@ -47,6 +48,10 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
         mItems = new ArrayList<>();
         mFilteredItems = new ArrayList<>();
         mListener = listener;
+    }
+
+    public void setOnLongClickListener(OnLongClickItemListener<T> onLongClickListener) {
+        mOnLongClickListener = onLongClickListener;
     }
 
     /*
@@ -70,6 +75,17 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
             @Override
             public void onClick(View v) {
                 mListener.onSelectItem(item, viewHolder.getAdapterPosition());
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (null != mOnLongClickListener) {
+                    mOnLongClickListener.onItemLongClick(item, viewHolder.getAdapterPosition());
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -151,5 +167,9 @@ public abstract class AbsListAdapter<T, R extends RecyclerView.ViewHolder> exten
 
     public interface OnSelectItemListener<T> {
         void onSelectItem(T item, int position);
+    }
+
+    public interface OnLongClickItemListener<T> {
+        void onItemLongClick(T item, int position);
     }
 }

@@ -17,14 +17,34 @@
 package im.vector.fragments;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
+import org.matrix.androidsdk.data.Room;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import butterknife.BindView;
 import im.vector.R;
+import im.vector.adapters.AbsListAdapter;
+import im.vector.adapters.RoomAvatarAdapter;
+import im.vector.view.HomeRecyclerView;
 
 public class FavouritesFragment extends AbsHomeFragment {
+
+    @BindView(R.id.recyclerview_1)
+    HomeRecyclerView mRecyclerView1;
+
+    @BindView(R.id.recyclerview_2)
+    HomeRecyclerView mRecyclerView2;
 
     /*
      * *********************************************************************************************
@@ -89,6 +109,48 @@ public class FavouritesFragment extends AbsHomeFragment {
      */
 
     private void initViews() {
-        // TODO
+        Collection<Room> rooms =  mSession.getDataHandler().getStore().getRooms();
+
+        mRecyclerView1.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView1.setHasFixedSize(true);
+        mRecyclerView1.setNestedScrollingEnabled(false);
+
+        final RoomAvatarAdapter adapter1 = new RoomAvatarAdapter(getActivity(), new AbsListAdapter.OnSelectItemListener<Room>() {
+            @Override
+            public void onSelectItem(Room item, int position) {
+
+            }
+        });
+
+        adapter1.setOnLongClickListener(new AbsListAdapter.OnLongClickItemListener<Room>() {
+            @Override
+            public void onItemLongClick(Room room, int position) {
+                mRecyclerView1.setDragMode(true);
+            }
+        });
+
+        mRecyclerView1.setAdapter(adapter1);
+        adapter1.setItems(new ArrayList<>(rooms));
+
+
+        mRecyclerView2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView2.setHasFixedSize(true);
+        mRecyclerView2.setNestedScrollingEnabled(false);
+
+        final RoomAvatarAdapter adapter2 = new RoomAvatarAdapter(getActivity(), new AbsListAdapter.OnSelectItemListener<Room>() {
+            @Override
+            public void onSelectItem(Room item, int position) {
+
+            }
+        });
+        mRecyclerView2.setAdapter(adapter2);
+        adapter2.setItems(new ArrayList<>(rooms));
+
+        adapter2.setOnLongClickListener(new AbsListAdapter.OnLongClickItemListener<Room>() {
+            @Override
+            public void onItemLongClick(Room room, int position) {
+                mRecyclerView2.setDragMode(true);
+            }
+        });
     }
 }
