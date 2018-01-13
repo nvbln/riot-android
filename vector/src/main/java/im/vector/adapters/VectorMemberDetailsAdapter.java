@@ -18,6 +18,8 @@
 package im.vector.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +37,14 @@ import java.util.List;
 import im.vector.R;
 import im.vector.activity.CommonActivityUtils;
 import im.vector.activity.VectorMemberDetailsActivity;
+import im.vector.activity.VectorRoomInviteMembersActivity;
 import im.vector.util.ThemeUtils;
 import im.vector.util.VectorUtils;
 import im.vector.view.VectorCircularImageView;
+
+import static android.app.Activity.RESULT_OK;
+import static im.vector.activity.VectorRoomInviteMembersActivity.EXTRA_OUT_SELECTED_PARTICIPANT_ITEMS;
+import static im.vector.activity.VectorRoomInviteMembersActivity.EXTRA_OUT_SELECTED_USER_IDS;
 
 /**
  * An adapter which can display the available actions list
@@ -409,7 +416,34 @@ public class VectorMemberDetailsAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View view) {
                     if (null != mActionListener) {
-                        mActionListener.performItemAction(currentItem.mActionType);
+                        if (VectorMemberDetailsActivity.ITEM_ACTION_KICK == currentItem.mActionType
+                                || VectorMemberDetailsActivity.ITEM_ACTION_BAN == currentItem.mActionType) {
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(view.getContext());
+                            builder.setTitle(R.string.dialog_title_confirmation);
+
+                            if (VectorMemberDetailsActivity.ITEM_ACTION_KICK == currentItem.mActionType) {
+                                builder.setMessage(view.getContext().getString(R.string.room_participants_kick_prompt_msg));
+                            } else {
+                                builder.setMessage(view.getContext().getString(R.string.room_participants_ban_prompt_msg));
+                            }
+                            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mActionListener.performItemAction(currentItem.mActionType);
+                                }
+                            });
+
+                            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // nothing to do
+                                }
+                            });
+
+                            builder.show();
+                        } else {
+                            mActionListener.performItemAction(currentItem.mActionType);
+                        }
                     }
                 }
             });
